@@ -24,7 +24,7 @@ export default function Resizer({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current as number);
-  }, []);
+  }, [animate]);
 
   return (
     <>
