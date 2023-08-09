@@ -13,13 +13,13 @@ export default function Resizer({ children }: { children: React.ReactNode }) {
 
   const requestRef: React.MutableRefObject<number | undefined> = React.useRef();
 
-  const animate = (_time: number) => {
+  const animate = React.useCallback((_time: number) => {
     setDimensions({
       height: window.innerHeight,
       width: window.innerWidth
     });
     requestRef.current = requestAnimationFrame(animate);
-  };
+  }, []);
 
   React.useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
