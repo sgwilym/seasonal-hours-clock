@@ -18,7 +18,7 @@ export interface ClockProps {
   loc: Location | null;
   highlighted_hours: Set<number>; // indexes (0 = candle) of hours to highlight
   hourTable: Record<number, HourOf>;
-  rotate: number; // Shift the clock interface by this many degrees (360 degrees equal 24 hours)
+  rotate: number; // Shift the clock interface by this many hours
 }
 
 // Everything you need to render a clock at a certain point in time.

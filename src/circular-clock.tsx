@@ -205,7 +205,7 @@ export default function CircularClock({
 
   return (
     <svg width={width} height={height}>
-      <Rotate cx={cx} cy={cy} angle={rotate}>
+      <Rotate cx={cx} cy={cy} angle={(rotate / 24) * 360}>
         {/* everything in here is calculated based on utc */}
         {/* and must be rotated according to the offset to utc */}
         {radius >= give_up_radius && (
