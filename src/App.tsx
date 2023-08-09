@@ -105,6 +105,12 @@ function get_highlighted_hours(url: URL): Set<number> {
 
 const highlighted_hours = get_highlighted_hours(url);
 
+const rotate_string = url.searchParams.get("rotate");
+let rotate = rotate_string ? parseFloat(rotate_string) : NaN;
+if (Number.isNaN(rotate)) {
+  rotate = 0;
+}
+
 let now = new Date();
 let hoursOffset = (-1 * now.getTimezoneOffset()) / 60;
 const offset_string = url.searchParams.get("offset");
@@ -133,6 +139,7 @@ export default function App() {
             loc={loc}
             highlighted_hours={highlighted_hours}
             hourTable={hourTable}
+            rotate={rotate}
           />
         </NowUpdater>
         <RepoLink />

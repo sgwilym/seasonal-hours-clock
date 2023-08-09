@@ -34,6 +34,8 @@ You can specify an offset from utc in the url to override the time displayed in 
 - Berlin in summer (latitude 52.31 degrees, longitude 13.24 degrees, UTC+2): [`https://seasonalclock.org/?lat=52.31&lon=13.24&offset=2`](https://seasonalclock.org/?lat=52.31&lon=13.24&offset=2)
 - Wellington (latitude -41.17 degrees, longitude 174.46 degrees, UTC+12): [`https://seasonalclock.org/?lat=-41.17&lon=174.46&offset=12`](https://seasonalclock.org/?lat=-41.17&lon=174.46&offset=12)
 
+You can rotate the full display by adding a search parameter of the form `rotate=<degrees_as_float>` to the url. By default, noon is at the top of the screen, but setting the rotation to `180` moves midnight to the top: [`https://seasonalclock.org/?rotate=180`](https://seasonalclock.org/?rotate=180)
+
 ---
 
 [seasonal-hours.ts](https://github.com/sgwilym/seasonal-hours-clock/blob/main/src/seasonal-hours.ts)
