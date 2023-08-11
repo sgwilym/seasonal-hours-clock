@@ -31,7 +31,8 @@ export default function CircularClock({
   time,
   sun_hours,
   highlighted_hours,
-  hourTable
+  hourTable,
+  rotate
 }: ClockUiProps) {
   const radius = Math.min(width, height) / 2;
   const cx = width / 2;
@@ -204,132 +205,134 @@ export default function CircularClock({
 
   return (
     <svg width={width} height={height}>
-      {/* everything in here is calculated based on utc */}
-      {/* and must be rotated according to the offset to utc */}
-      {radius >= give_up_radius && (
-        <Rotate cx={cx} cy={cy} angle={time_to_angle(utc_offset)}>
-          {sun_hours_display}
-          {/* highlighted background */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={highlight_annulus_end}
-            radMin={highlight_annulus_start}
-            textAlign="center-line"
-            ticks={range(24).map((n) => ({
-              angle: (360 * n) / 24,
-              text: "",
-              className: `sNone ${determine_highlighting(n)}`,
-              classNameText: ""
-            }))}
-          />
-          {/* hour hand */}
-          <Rotate cx={cx} cy={cy} angle={time_to_angle(time)}>
-            {/* sun */}
-            <circle
+      <Rotate cx={cx} cy={cy} angle={(rotate / 24) * 360}>
+        {/* everything in here is calculated based on utc */}
+        {/* and must be rotated according to the offset to utc */}
+        {radius >= give_up_radius && (
+          <Rotate cx={cx} cy={cy} angle={time_to_angle(utc_offset)}>
+            {sun_hours_display}
+            {/* highlighted background */}
+            <Dial
               cx={cx}
-              cy={cy + sun_distance}
-              r={sun_radius}
-              className={"sFillInk"}
-            />
-
-            {/* line of hour hand */}
-            <line
-              x1={cx}
-              y1={cy + sun_distance}
-              x2={cx}
-              y2={cy + hour_hand_tip}
-              className={"sLineInk"}
-            />
-          </Rotate>
-          {/* main hour displays */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={main_annulus_end}
-            radMin={main_annulus_start}
-            textAlign="center-range"
-            textScale={main_scale}
-            dominantBaseline={
-              radius >= show_names_radius ? "mathematical" : "central"
-            }
-            ticks={range(24).map((n) => {
-              let hourOf = hourTable[n];
-              const label =
-                radius >= show_names_radius
-                  ? `${hourOf.shortName[0].toUpperCase()}${hourOf.shortName.slice(
-                      1
-                    )}`
-                  : `${hourOf.emoji}\uFE0F`;
-
-              return {
+              cy={cy}
+              radMax={highlight_annulus_end}
+              radMin={highlight_annulus_start}
+              textAlign="center-line"
+              ticks={range(24).map((n) => ({
                 angle: (360 * n) / 24,
-                text: label,
-                className: `${
-                  sFillSeasonLookup[hourOf.season]
-                } ${determine_highlighting(n)}`,
-                classNameText: `sFillInk ${determine_highlighting(n)}`
-              };
-            })}
-          />
-          {/* utc time */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={outer_annulus_end}
-            radMin={outer_annulus_start}
-            textAlign="center-line"
-            textScale={outer_scale}
-            ticks={range(24).map((n) => ({
-              angle: (360 * n) / 24,
-              text: `U ${("" + n).padStart(2, "0")}`,
-              className: "sNone",
-              classNameText: "sFillInkFaint"
-            }))}
-          />
-          {/* emoji on outer ring */}
-          {radius >= show_names_radius && (
+                text: "",
+                className: `sNone ${determine_highlighting(n)}`,
+                classNameText: ""
+              }))}
+            />
+            {/* hour hand */}
+            <Rotate cx={cx} cy={cy} angle={time_to_angle(time)}>
+              {/* sun */}
+              <circle
+                cx={cx}
+                cy={cy + sun_distance}
+                r={sun_radius}
+                className={"sFillInk"}
+              />
+
+              {/* line of hour hand */}
+              <line
+                x1={cx}
+                y1={cy + sun_distance}
+                x2={cx}
+                y2={cy + hour_hand_tip}
+                className={"sLineInk"}
+              />
+            </Rotate>
+            {/* main hour displays */}
+            <Dial
+              cx={cx}
+              cy={cy}
+              radMax={main_annulus_end}
+              radMin={main_annulus_start}
+              textAlign="center-range"
+              textScale={main_scale}
+              dominantBaseline={
+                radius >= show_names_radius ? "mathematical" : "central"
+              }
+              ticks={range(24).map((n) => {
+                let hourOf = hourTable[n];
+                const label =
+                  radius >= show_names_radius
+                    ? `${hourOf.shortName[0].toUpperCase()}${hourOf.shortName.slice(
+                        1
+                      )}`
+                    : `${hourOf.emoji}\uFE0F`;
+
+                return {
+                  angle: (360 * n) / 24,
+                  text: label,
+                  className: `${
+                    sFillSeasonLookup[hourOf.season]
+                  } ${determine_highlighting(n)}`,
+                  classNameText: `sFillInk ${determine_highlighting(n)}`
+                };
+              })}
+            />
+            {/* utc time */}
             <Dial
               cx={cx}
               cy={cy}
               radMax={outer_annulus_end}
               radMin={outer_annulus_start}
               textAlign="center-line"
-              textScale={outer_emoji_scale}
-              dominantBaseline="text-top"
+              textScale={outer_scale}
               ticks={range(24).map((n) => ({
-                angle: (360 * (n + 0.5)) / 24,
-                text: `${hourTable[n].emoji}\uFE0F`,
+                angle: (360 * n) / 24,
+                text: `U ${("" + n).padStart(2, "0")}`,
                 className: "sNone",
                 classNameText: "sFillInkFaint"
               }))}
             />
-          )}
-        </Rotate>
-      )}
+            {/* emoji on outer ring */}
+            {radius >= show_names_radius && (
+              <Dial
+                cx={cx}
+                cy={cy}
+                radMax={outer_annulus_end}
+                radMin={outer_annulus_start}
+                textAlign="center-line"
+                textScale={outer_emoji_scale}
+                dominantBaseline="text-top"
+                ticks={range(24).map((n) => ({
+                  angle: (360 * (n + 0.5)) / 24,
+                  text: `${hourTable[n].emoji}\uFE0F`,
+                  className: "sNone",
+                  classNameText: "sFillInkFaint"
+                }))}
+              />
+            )}
+          </Rotate>
+        )}
 
-      {/* local time */}
-      {radius >= give_up_radius && (
-        <Dial
-          cx={cx}
-          cy={cy}
-          radMax={inner_annulus_end}
-          radMin={inner_annulus_start}
-          textAlign="center-line"
-          textScale={inner_scale} // overwritten by fontSize
-          fontSize={Math.max(
-            (inner_annulus_end - inner_annulus_start) * inner_scale,
-            11.2
-          )}
-          ticks={range(24).map((n) => ({
-            angle: (360 * n) / 24 + 540,
-            text:
-              n % show_local_times_divisible_by === 0 ? hourToString(n) : ".",
-            className: "sNone",
-            classNameText: "sFillInk"
-          }))}
-        />
-      )}
+        {/* local time */}
+        {radius >= give_up_radius && (
+          <Dial
+            cx={cx}
+            cy={cy}
+            radMax={inner_annulus_end}
+            radMin={inner_annulus_start}
+            textAlign="center-line"
+            textScale={inner_scale} // overwritten by fontSize
+            fontSize={Math.max(
+              (inner_annulus_end - inner_annulus_start) * inner_scale,
+              11.2
+            )}
+            ticks={range(24).map((n) => ({
+              angle: (360 * n) / 24 + 540,
+              text:
+                n % show_local_times_divisible_by === 0 ? hourToString(n) : ".",
+              className: "sNone",
+              classNameText: "sFillInk"
+            }))}
+          />
+        )}
+      </Rotate>
 
       <text
         dx={cx}

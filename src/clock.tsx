@@ -18,6 +18,7 @@ export interface ClockProps {
   loc: Location | null;
   highlighted_hours: Set<number>; // indexes (0 = candle) of hours to highlight
   hourTable: Record<number, HourOf>;
+  rotate: number; // Shift the clock interface by this many hours
 }
 
 // Everything you need to render a clock at a certain point in time.
@@ -30,6 +31,7 @@ export interface ClockUiProps {
   sun_hours: SunHours | null;
   highlighted_hours: Set<number>; // indexes (0 = candle) of hours to highlight
   hourTable: Record<number, HourOf>;
+  rotate: number;
 }
 
 export interface SunHours {
@@ -82,6 +84,7 @@ export function Clock(props: ClockProps) {
       sun_hours={sun_hours}
       highlighted_hours={props.highlighted_hours}
       hourTable={props.hourTable}
+      rotate={props.rotate}
     />
   );
 }
