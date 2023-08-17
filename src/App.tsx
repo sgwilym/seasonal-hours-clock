@@ -93,7 +93,12 @@ function get_highlighted_hours(url: URL): Set<number> {
     } else {
       const low = highlight_string.toLowerCase();
       for (let i = 0; i < 24; i++) {
-        if (low === hourTable[i].shortName) {
+        if (
+          low === hourTable[i].shortName ||
+          low.startsWith(
+            hourTable[i].emoji
+          ) /* also works when the emoji in the url is followed by \uFE0F */
+        ) {
           hours.add(i);
         }
       }
